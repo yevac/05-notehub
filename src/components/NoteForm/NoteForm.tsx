@@ -1,4 +1,4 @@
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createNote } from "../../services/noteService";
@@ -15,11 +15,11 @@ const schema = Yup.object({
     .required(),
 });
 
-interface Props {
+interface NoteListProps {
   closeModal: () => void;
 }
 
-export default function NoteForm({ closeModal }: Props) {
+export default function NoteForm({ closeModal }: NoteListProps) {
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
@@ -37,9 +37,12 @@ export default function NoteForm({ closeModal }: Props) {
       onSubmit={(values) => mutation.mutate(values)}
     >
       <Form className={css.form}>
-        <Field name="title" />
-        <Field name="content" as="textarea" />
+        <Field name="title" placeholder="Title" />
+        <ErrorMessage name="title" component="div" className={css.error} />
+        <Field name="content" as="textarea" placeholder="Content" />
+        <ErrorMessage name="content" component="div" className={css.error} />
         <Field name="tag" as="select">
+        <ErrorMessage name="tag" component="div" className={css.error} />
           <option>Todo</option>
           <option>Work</option>
           <option>Personal</option>
